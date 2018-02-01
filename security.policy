@@ -1,0 +1,4 @@
+grant codeBase "file:/home/david/Documents/Fourth Year/CT414 Distributed Systems & Co-Op Computing/assignment1/-" {
+    permission java.security.AllPermission;
+};
+
