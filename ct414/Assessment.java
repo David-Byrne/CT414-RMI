@@ -15,7 +15,7 @@ public interface Assessment extends Serializable {
 	public Date getClosingDate();
 
 	// Return a list of all questions and anser options
-	public List<Question> getQuestions();
+	public Question[] getQuestions();
 
 	// Return one question only with answer options
 	public Question getQuestion(int questionNumber) throws 

@@ -5,13 +5,16 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
+import java.util.Date;
 
 public class ExamEngine implements ExamServer {
 
+    private Student[] students;
+
     // Constructor is required
-    public ExamEngine() {
+    public ExamEngine(Student[] students) {
         super();
+        this.students = students;
     }
 
     // Implement the methods defined in the ExamServer interface...
@@ -19,20 +22,27 @@ public class ExamEngine implements ExamServer {
     public int login(int studentid, String password) throws 
                 UnauthorizedAccess, RemoteException {
 
-	// TBD: You need to implement this method!
-	// For the moment method just returns an empty or null value to allow it to compile
+        for(Student s: students){
+            if(s.getId() == studentid && s.getPassword().equals(password)){
+                return 1; //TODO
+            }
+        }
 
-	return 0;	
+        throw new UnauthorizedAccess("Incorrect Username or Password");
     }
 
     // Return a summary list of Assessments currently available for this studentid
-    public List<String> getAvailableSummary(int token, int studentid) throws
+    public Assessment[] getAvailableSummary(int token, int studentid) throws
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 
-        // TBD: You need to implement this method!
-        // For the moment method just returns an empty or null value to allow it to compile
+        //TODO check token
+        for(Student s: students){
+            if(s.getId() == studentid){
+                return s.getAssessments();
+            }
+        }
 
-        return null;
+        throw new NoMatchingAssessment("No assessments available for this student");
     }
 
     // Return an Assessment object associated with a particular course code
@@ -52,17 +62,32 @@ public class ExamEngine implements ExamServer {
         // TBD: You need to implement this method!
     }
 
+    private static Assessment[] generateAssessments(){
+        Assessment as1 = new MCQassessment("Geography",
+                new Date(),
+                new Question[]{new MCQquestion("Capital of Ireland", new String[]{"Dublin","London","Galway"})});
+
+        return new Assessment[]{as1};
+    }
+
     public static void main(String[] args) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String name = "ExamServer";
-            ExamServer engine = new ExamEngine();
-            ExamServer stub =
-                (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
+            Assessment[] assessments = generateAssessments();
+
+            ExamEngine engine = new ExamEngine(
+                    new Student[]{new Student(1, "secret", assessments)}
+            );
+
+            engine.login(1, "secret");
+            System.out.println(engine.login(1, "secret"));
+            System.out.println(engine.getAvailableSummary(0, 1)[0].getInformation());
+
+            ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.getRegistry();
-            registry.rebind(name, stub);
+            registry.rebind("ExamServer", stub);
             System.out.println("ExamEngine bound");
         } catch (Exception e) {
             System.err.println("ExamEngine exception:");
