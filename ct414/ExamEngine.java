@@ -15,7 +15,7 @@ public class ExamEngine implements ExamServer {
 
     private Student[] students;
     private Assessment[] assessments;
-    private HashMap<Integer, Date> activeSessions;
+    private HashMap<Integer, Session> activeSessions;
 
     // Constructor is required
     public ExamEngine(Student[] students, Assessment[] assessments) {
@@ -33,8 +33,7 @@ public class ExamEngine implements ExamServer {
         for(Student s: students){
             if(s.getId() == studentid && s.getPassword().equals(password)){
                 int token = new Random().nextInt(Integer.MAX_VALUE);
-                activeSessions.put(token, new Date( new Date().getTime() + (60 * 60 * 1000)));
-                // Logs them in for an hour
+                activeSessions.put(token, new Session(studentid));
                 return token;
             }
         }
@@ -46,7 +45,7 @@ public class ExamEngine implements ExamServer {
     public List<Assessment> getAvailableSummary(int token, int studentid) throws
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 
-        validateToken(token);
+        validateToken(token, studentid);
 
         List<Assessment> validAssessments = new ArrayList<>();
 
@@ -66,7 +65,7 @@ public class ExamEngine implements ExamServer {
     public Assessment getAssessment(int token, int studentid, String assessmentCode) throws
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
 
-        validateToken(token);
+        validateToken(token, studentid);
 
         for(Assessment a: assessments){
             if(a.getAssessmentCode().equals(assessmentCode) && a.getAssociatedID() == studentid &&
@@ -81,7 +80,7 @@ public class ExamEngine implements ExamServer {
     // Submit a completed assessment
     public void submitAssessment(int token, int studentid, Assessment completed) throws 
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
-        validateToken(token);
+        validateToken(token, studentid);
 
         for(int i=0; i<assessments.length; i++){
             if(assessments[i].getAssessmentCode().equals(completed.getAssessmentCode()) &&
@@ -95,14 +94,19 @@ public class ExamEngine implements ExamServer {
         throw new NoMatchingAssessment("No matching assignment found");
     }
 
-    private void validateToken(int token) throws UnauthorizedAccess, RemoteException {
-        Date expiryDate = activeSessions.get(token);
-        if (expiryDate != null && expiryDate.after(new Date())){
-            return;
+    private void validateToken(int token, int userID) throws UnauthorizedAccess, RemoteException {
+        Session session = activeSessions.get(token);
+
+        if (session == null || session.getUserID() != userID){
+            throw new UnauthorizedAccess("Session doesn't exist, please log in");
         }
-        // If the token has expired, remove it
-        activeSessions.remove(token);
-        throw new UnauthorizedAccess("Session has expired, please log in");
+
+        if (session.getExpiry().before(new Date())){
+            // If the token has expired, remove it
+            activeSessions.remove(token);
+            throw new UnauthorizedAccess("Session has expired, please log in");
+        }
+
     }
 
     private static Assessment[] generateAssessments(Student student){
@@ -163,6 +167,7 @@ public class ExamEngine implements ExamServer {
             System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
             netAssessment.selectAnswer(1, 2);
             System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
+            engine.submitAssessment(token, stu1.getId(), netAssessment);
 
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.getRegistry();
