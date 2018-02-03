@@ -4,12 +4,10 @@ public class Student {
 
     private int id;
     private String password;
-    private Assessment[] assessments;
 
-    public Student(int id, String password, Assessment[] assessments) {
+    public Student(int id, String password) {
         this.id = id;
         this.password = password;
-        this.assessments = assessments;
     }
 
     public int getId() {
@@ -18,9 +16,5 @@ public class Student {
 
     public String getPassword() {
         return password;
-    }
-
-    public Assessment[] getAssessments() {
-        return assessments;
     }
 }

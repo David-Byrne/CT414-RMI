@@ -5,18 +5,26 @@ import java.util.Date;
 public class MCQassessment implements Assessment{
 
     private String information;
+    private String code;
     private Date closingDate;
     private Question[] questions;
+    private int studentID;
 
-    public MCQassessment(String information, Date closingDate, Question[] questions) {
+    public MCQassessment(String information, String assessmentCode, Student student, Date closingDate, Question[] questions) {
         this.information = information;
+        this.code = assessmentCode;
         this.closingDate = closingDate;
         this.questions = questions;
+        this.studentID = student.getId();
     }
 
     @Override
     public String getInformation() {
         return this.information;
+    }
+
+    public String getAssessmentCode() {
+        return code;
     }
 
     @Override
@@ -31,8 +39,11 @@ public class MCQassessment implements Assessment{
 
     @Override
     public Question getQuestion(int questionNumber) throws InvalidQuestionNumber {
-        // TODO
-        return null;
+        try{
+            return questions[questionNumber - 1];
+        } catch (ArrayIndexOutOfBoundsException e){
+            throw new InvalidQuestionNumber();
+        }
     }
 
     @Override
@@ -43,13 +54,12 @@ public class MCQassessment implements Assessment{
     @Override
     public int getSelectedAnswer(int questionNumber) {
         // TODO
+
         return 0;
     }
 
     @Override
     public int getAssociatedID() {
-        // TODO
-
-        return 0;
+        return this.studentID;
     }
 }

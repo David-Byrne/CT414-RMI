@@ -4,16 +4,17 @@ public class MCQquestion implements Question {
 
     private String detail;
     private String[] answerOptions;
+    private int number;
 
-    public MCQquestion(String detail, String[] answerOptions) {
+    public MCQquestion(String detail, String[] answerOptions, int number) {
         this.detail = detail;
         this.answerOptions = answerOptions;
+        this.number = number;
     }
 
     @Override
     public int getQuestionNumber() {
-        //TODO
-        return 0;
+        return this.number;
     }
 
     @Override
@@ -24,5 +25,10 @@ public class MCQquestion implements Question {
     @Override
     public String[] getAnswerOptions() {
         return this.answerOptions;
+    }
+
+    @Override
+    public String toString(){
+        return this.detail;
     }
 }
