@@ -9,6 +9,7 @@ public class MCQassessment implements Assessment{
     private Date closingDate;
     private Question[] questions;
     private int studentID;
+    private int[] selectedAnswers;
 
     public MCQassessment(String information, String assessmentCode, Student student, Date closingDate, Question[] questions) {
         this.information = information;
@@ -16,6 +17,7 @@ public class MCQassessment implements Assessment{
         this.closingDate = closingDate;
         this.questions = questions;
         this.studentID = student.getId();
+        this.selectedAnswers = new int[questions.length];
     }
 
     @Override
@@ -48,14 +50,20 @@ public class MCQassessment implements Assessment{
 
     @Override
     public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber {
-        // TODO
+        if(questionNumber < 0 || questionNumber >= questions.length){
+            throw new InvalidQuestionNumber();
+        }
+
+        if(optionNumber < 0 || optionNumber >= getQuestion(questionNumber).getAnswerOptions().length){
+            throw new InvalidOptionNumber();
+        }
+        this.selectedAnswers[questionNumber - 1] = optionNumber;
+
     }
 
     @Override
     public int getSelectedAnswer(int questionNumber) {
-        // TODO
-
-        return 0;
+        return selectedAnswers[questionNumber - 1];
     }
 
     @Override

@@ -154,8 +154,15 @@ public class ExamEngine implements ExamServer {
             );
 
             int token = engine.login(stu1.getId(), "secret");
-            System.out.println(engine.getAvailableSummary(token, stu1.getId()).get(0).getQuestion(1));
-            System.out.println(engine.getAssessment(token, stu1.getId(), "NET005").getQuestion(3));
+            Question geoQ1 = engine.getAvailableSummary(token, stu1.getId()).get(0).getQuestion(1);
+            System.out.println(geoQ1);
+
+            Assessment netAssessment = engine.getAssessment(token, stu1.getId(), "NET005");
+            Question netQ1 = netAssessment.getQuestion(1);
+            System.out.println(netQ1);
+            System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
+            netAssessment.selectAnswer(1, 2);
+            System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
 
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.getRegistry();
