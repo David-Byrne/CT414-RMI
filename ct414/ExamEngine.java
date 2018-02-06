@@ -170,7 +170,7 @@ public class ExamEngine implements ExamServer {
             engine.submitAssessment(token, stu1.getId(), netAssessment);
 
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
-            Registry registry = LocateRegistry.getRegistry();
+            Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("ExamServer", stub);
             System.out.println("ExamEngine bound");
         } catch (Exception e) {
