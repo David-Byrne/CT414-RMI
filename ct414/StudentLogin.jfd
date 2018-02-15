@@ -4,10 +4,35 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {space :0:400:x}"
-			"$verticalGroup": "par l {space :0:300:x}"
+			"$horizontalGroup": "par l {seq l {space :p:126:p, par l {comp label3::l:p:147:p, comp label1::l:p::p, comp usernameField::l:p:149:p, comp label2::l:p::p, comp passwordField1::l:p:146:p}, space ::123:x}, seq t {space ::229:x, comp loginButton:::p::p, space :p:101:p}}"
+			"$verticalGroup": "par l {seq l {space :p:17:p, comp label3:::p:37:p, space :p:26:p, comp label1:::p::p, space :::p, comp usernameField:::p::p, space :::p, comp label2:::p::p, space :::p, comp passwordField1:::p::p, space :p:18:p, comp loginButton:::p::p, space ::38:x}}"
 		} ) {
 			name: "this"
+			"font": new java.awt.Font( "Dialog", 0, 16 )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Username:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Password:"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Assessment System"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 2, 0, false )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "usernameField"
+			} )
+			add( new FormComponent( "javax.swing.JPasswordField" ) {
+				name: "passwordField1"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "loginButton"
+				"text": "Login"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loginButtonActionPerformed", true ) )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 400, 300 )

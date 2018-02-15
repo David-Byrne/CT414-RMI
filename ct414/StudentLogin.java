@@ -2,6 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import ct414.Student;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 /*
  * Created by JFormDesigner on Tue Feb 13 19:32:35 GMT 2018
  */
@@ -12,13 +15,27 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class StudentLogin extends JFrame {
+
+    public static void main(String args[]) {
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String name = "Student";
+            Registry registry = LocateRegistry.createRegistry(1099);
+            Student student = (Student) registry.lookup(name);
+        } catch (Exception e) {
+            System.err.println("StudentLogin exception:");
+            e.printStackTrace();
+        }
+    }
     public StudentLogin() {
         initComponents();
     }
 
     private void loginButtonActionPerformed(ActionEvent e) {
         String usernameValue = usernameField.getText();
-        String passwordValue = passwordField1.getPassword();
+        String passwordValue = String.valueOf(passwordField1.getPassword());
 
     }
 

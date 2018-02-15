@@ -4,13 +4,27 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {space :0:400:x}"
-			"$verticalGroup": "par l {space :0:300:x}"
+			"$horizontalGroup": "par l {seq {par l {seq {space :p:74:p, comp label2:::p::p}, seq l {space :p:271:p, comp label1:::p::p}, seq l {space :p:248:p, comp label3:::p::p}}, space ::316:x}}"
+			"$verticalGroup": "par l {seq l {space :p:24:p, comp label1:::p::p, space :p:54:p, comp label2:::p::p, space ::128:x, comp label3:::p::p, space :p:185:p}}"
 		} ) {
 			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Assessment System"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 2, 10, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Student ID:"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 2, 0, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Assessments are not available at the moment"
+			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"location": new java.awt.Point( 0, 5 )
+			"size": new java.awt.Dimension( 830, 490 )
 		} )
 	}
 }
