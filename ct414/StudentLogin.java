@@ -1,8 +1,11 @@
+package ct414;
+
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import ct414.Student;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 /*
@@ -16,26 +19,45 @@ import java.rmi.registry.Registry;
  */
 public class StudentLogin extends JFrame {
 
+    static ExamServer server;
+
     public static void main(String args[]) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String name = "Student";
-            Registry registry = LocateRegistry.createRegistry(1099);
-            Student student = (Student) registry.lookup(name);
+            String name = "ExamServer";
+            Registry registry = LocateRegistry.getRegistry();
+            server = (ExamServer) registry.lookup(name);
+            StudentLogin studentLogin = new StudentLogin(server);
+
         } catch (Exception e) {
             System.err.println("StudentLogin exception:");
             e.printStackTrace();
         }
     }
-    public StudentLogin() {
+    public StudentLogin(ExamServer server) {
         initComponents();
     }
 
     private void loginButtonActionPerformed(ActionEvent e) {
-        String usernameValue = usernameField.getText();
+        int usernameValue = Integer.valueOf(usernameField.getText());
         String passwordValue = String.valueOf(passwordField1.getPassword());
+
+        try{
+            this.server.login(usernameValue,passwordValue);
+            System.out.println("Successful Login");
+        }
+        catch (UnauthorizedAccess unauthorizedAccess){
+            System.err.println("Incorrect Username or Password");
+            unauthorizedAccess.printStackTrace();
+            label4.setVisible(true);
+        }
+        catch (RemoteException remoteException){
+            System.err.println("Remote Exception");
+            remoteException.printStackTrace();
+        }
+
 
     }
 
@@ -48,6 +70,7 @@ public class StudentLogin extends JFrame {
         usernameField = new JTextField();
         passwordField1 = new JPasswordField();
         loginButton = new JButton();
+        label4 = new JLabel();
 
         //======== this ========
         setFont(new Font("Dialog", Font.PLAIN, 16));
@@ -67,6 +90,12 @@ public class StudentLogin extends JFrame {
         loginButton.setText("Login");
         loginButton.addActionListener(e -> loginButtonActionPerformed(e));
 
+        //---- label4 ----
+        label4.setText("Incorrect Username or Password");
+        label4.setForeground(Color.red);
+        label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.ITALIC));
+        label4.setVisible(false);
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -81,8 +110,10 @@ public class StudentLogin extends JFrame {
                         .addComponent(passwordField1, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(123, Short.MAX_VALUE))
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                    .addContainerGap(229, Short.MAX_VALUE)
-                    .addComponent(loginButton)
+                    .addContainerGap(106, Short.MAX_VALUE)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(label4)
+                        .addComponent(loginButton))
                     .addGap(101, 101, 101))
         );
         contentPaneLayout.setVerticalGroup(
@@ -90,7 +121,9 @@ public class StudentLogin extends JFrame {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addGap(17, 17, 17)
                     .addComponent(label3, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                    .addGap(26, 26, 26)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label4)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(usernameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -100,10 +133,11 @@ public class StudentLogin extends JFrame {
                     .addComponent(passwordField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
                     .addComponent(loginButton)
-                    .addContainerGap(38, Short.MAX_VALUE))
+                    .addContainerGap(34, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
+        setVisible(true);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -115,5 +149,6 @@ public class StudentLogin extends JFrame {
     private JTextField usernameField;
     private JPasswordField passwordField1;
     private JButton loginButton;
+    private JLabel label4;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
