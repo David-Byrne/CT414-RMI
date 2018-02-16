@@ -45,8 +45,10 @@ public class StudentLogin extends JFrame {
         String passwordValue = String.valueOf(passwordField1.getPassword());
 
         try{
-            this.server.login(usernameValue,passwordValue);
+            int token = this.server.login(usernameValue,passwordValue);
             System.out.println("Successful Login");
+            setVisible(false);
+            AssessmentSystem assessmentSystem = new AssessmentSystem(server,usernameValue,token);
         }
         catch (UnauthorizedAccess unauthorizedAccess){
             System.err.println("Incorrect Username or Password");
