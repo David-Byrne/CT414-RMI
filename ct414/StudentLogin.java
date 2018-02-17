@@ -36,7 +36,8 @@ public class StudentLogin extends JFrame {
             e.printStackTrace();
         }
     }
-    public StudentLogin(ExamServer server) {
+    public StudentLogin(ExamServer examServer) {
+        this.server = examServer;
         initComponents();
     }
 

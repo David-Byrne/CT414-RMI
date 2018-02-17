@@ -5,8 +5,11 @@
 package ct414;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.rmi.RemoteException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
@@ -21,12 +24,13 @@ public class AssessmentGUI extends JFrame {
     int ID_NUMBER;
     Question selectedQuestion;
 
-    public AssessmentGUI(ExamServer server, int token, int username, Assessment assessment) {
+    public AssessmentGUI(ExamServer server, int token, int username, Assessment assess) {
         this.examServer = server;
-        this.assessment = assessment;
+        this.assessment = assess;
         this.token = token;
         this.ID_NUMBER = username;
         try{
+            System.out.println(assessment);
             selectedQuestion = assessment.getQuestion(1);
             initComponents();
         }catch (InvalidQuestionNumber invalidQuestionNumber){
@@ -68,6 +72,7 @@ public class AssessmentGUI extends JFrame {
         comboBox2 = new JComboBox();
         label3 = new JLabel();
         label4 = new JLabel();
+        button1 = new JButton();
 
         //======== this ========
         setTitle(assessment.getAssessmentCode());
@@ -81,7 +86,6 @@ public class AssessmentGUI extends JFrame {
 
         //---- Select ----
         Select.setText("Select from: ");
-
 
         //---- QuestionValue ----
         QuestionValue.setText(selectedQuestion.getQuestionDetail());
@@ -101,6 +105,36 @@ public class AssessmentGUI extends JFrame {
 
         //---- label4 ----
         label4.setText("Select Answer:");
+
+        //---- button1 ----
+        button1.setText("Submit");
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    assessment.selectAnswer(comboBox1.getSelectedIndex()+1, comboBox2.getSelectedIndex());
+                    System.out.println(assessment);
+                    examServer.submitAssessment(token,ID_NUMBER,assessment);
+                    setVisible(false);
+                }catch (InvalidQuestionNumber invalidQuestionNumber){
+                    invalidQuestionNumber.printStackTrace();
+                    System.err.println("Invalid Question Number");
+
+                }catch (InvalidOptionNumber invalidOptionNumber){
+                    invalidOptionNumber.printStackTrace();
+                    System.err.println("Invalid Question Number");
+                }catch (UnauthorizedAccess unauthorizedAccess){
+                    unauthorizedAccess.printStackTrace();
+                    System.err.println("Unauthorized Access");
+                }catch (RemoteException remoteException){
+                    remoteException.printStackTrace();
+                    System.err.println("Remote Exception");
+                }catch (NoMatchingAssessment noMatchingAssessment){
+                    noMatchingAssessment.printStackTrace();
+                    System.err.println("No Matching Assessment");
+                }
+            }
+        });
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -132,6 +166,10 @@ public class AssessmentGUI extends JFrame {
                                             .addGap(34, 34, 34)
                                             .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))))
                     .addContainerGap(212, Short.MAX_VALUE))
+                .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                    .addGap(0, 334, Short.MAX_VALUE)
+                    .addComponent(button1)
+                    .addGap(28, 28, 28))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -152,7 +190,9 @@ public class AssessmentGUI extends JFrame {
                     .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addComponent(label4)
                         .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(101, Short.MAX_VALUE))
+                    .addGap(31, 31, 31)
+                    .addComponent(button1)
+                    .addContainerGap(44, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -170,5 +210,6 @@ public class AssessmentGUI extends JFrame {
     private JComboBox comboBox2;
     private JLabel label3;
     private JLabel label4;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

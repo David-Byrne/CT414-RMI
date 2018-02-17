@@ -24,21 +24,19 @@ public class AssessmentSystem extends JFrame {
     static int ID_NUMBER;
     List<Assessment> assessmentList;
     boolean AssessmentNotAvailable = false;
-    boolean unAuthorised = false;
-    String unAuthorisedExceptionReason = "";
     Assessment currentAssessment;
     ExamServer server;
     int token;
 
-    public AssessmentSystem(ExamServer server, int username, int token) {
+    public AssessmentSystem(ExamServer examServer, int username, int token) {
         this.ID_NUMBER = username;
 
-        this.server = server;
+        this.server = examServer;
 
         this.token = token;
 
         try{
-            assessmentList = server.getAvailableSummary(token,username);
+            assessmentList = server.getAvailableSummary(this.token,ID_NUMBER);
         }
         catch (NoMatchingAssessment noMatchingAssessment){
             AssessmentNotAvailable = true;
@@ -50,10 +48,7 @@ public class AssessmentSystem extends JFrame {
             remoteException.printStackTrace();
         }
         catch (UnauthorizedAccess unauthorizedAccess){
-            unAuthorised = true;
-            AssessmentNotAvailable = false;
-            unAuthorisedExceptionReason = unauthorizedAccess.getMessage();
-            System.err.println(unAuthorisedExceptionReason);
+            System.err.println("Unauthorised Access");
             unauthorizedAccess.printStackTrace();
         }
         initComponents();
@@ -75,7 +70,6 @@ public class AssessmentSystem extends JFrame {
         // Generated using JFormDesigner Evaluation license - Jekaterina Zenkevica
         label2 = new JLabel();
         label3 = new JLabel();
-        label4 = new JLabel();
         panel1 = new JPanel();
         label5 = new JLabel();
         comboBox1 = new JComboBox();
@@ -96,11 +90,8 @@ public class AssessmentSystem extends JFrame {
         label3.setText("Assessments are not available at the moment");
         label3.setVisible(AssessmentNotAvailable);
 
-        //---- label4 ----
-        label4.setText(unAuthorisedExceptionReason);
-        label4.setVisible(unAuthorised);
-        if(!AssessmentNotAvailable) {
 
+        if(!AssessmentNotAvailable) {
             //======== panel1 ========
             {
                 //---- label5 ----
@@ -109,11 +100,11 @@ public class AssessmentSystem extends JFrame {
                 //---- label6 ----
                 label6.setText("Select from: ");
 
-                for(int i = 0; i<assessmentList.size(); i++){
+                currentAssessment = assessmentList.get(0);
+
+                for (int i = 0; i < assessmentList.size(); i++) {
                     comboBox1.addItem(assessmentList.get(i).getInformation());
                 }
-
-                currentAssessment = assessmentList.get(0);
 
                 comboBox1.addItemListener(new ItemChangeListener());
 
@@ -128,6 +119,7 @@ public class AssessmentSystem extends JFrame {
                 button1.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        setVisible(false);
                         AssessmentGUI assessmentGUI = new AssessmentGUI(server,token,ID_NUMBER, currentAssessment);
                     }
                 });
@@ -193,13 +185,11 @@ public class AssessmentSystem extends JFrame {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addGroup(contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGap(308, 308, 308)
-                            .addComponent(label4)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label3))
-                        .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGap(49, 49, 49)
-                            .addComponent(label2)))
+                            .addComponent(label2))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGap(268, 268, 268)
+                            .addComponent(label3)))
                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
@@ -207,13 +197,11 @@ public class AssessmentSystem extends JFrame {
                 .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
                     .addGap(52, 52, 52)
                     .addComponent(label2)
-                    .addGap(34, 34, 34)
-                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(10, 10, 10)
+                    .addComponent(label3)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label4)
-                        .addComponent(label3))
-                    .addGap(184, 184, 184))
+                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(91, 91, 91))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -225,7 +213,6 @@ public class AssessmentSystem extends JFrame {
     // Generated using JFormDesigner Evaluation license - Jekaterina Zenkevica
     private JLabel label2;
     private JLabel label3;
-    private JLabel label4;
     private JPanel panel1;
     private JLabel label5;
     private JComboBox comboBox1;

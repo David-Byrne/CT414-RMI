@@ -8,7 +8,7 @@ public class Session {
     private int userID;
 
     public Session(int userID) {
-        this.expiry = new Date(new Date().getTime() + (3 * 60 * 1000));
+        this.expiry = new Date(new Date().getTime() + (60 * 60 * 1000));
         // logs them in for an hour
         this.userID = userID;
     }

@@ -158,18 +158,6 @@ public class ExamEngine implements ExamServer {
                     assessments
             );
 
-//            int token = engine.login(stu1.getId(), "secret");
-//            Question geoQ1 = engine.getAvailableSummary(token, stu1.getId()).get(0).getQuestion(1);
-//            System.out.println(geoQ1);
-//
-//            Assessment netAssessment = engine.getAssessment(token, stu1.getId(), "NET005");
-//            Question netQ1 = netAssessment.getQuestion(1);
-//            System.out.println(netQ1);
-//            System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
-//            netAssessment.selectAnswer(1, 2);
-//            System.out.println(netQ1.getAnswerOptions()[netAssessment.getSelectedAnswer(1)]);
-//            engine.submitAssessment(token, stu1.getId(), netAssessment);
-
             ExamServer stub = (ExamServer) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.createRegistry(1099);
             registry.rebind("ExamServer", stub);
