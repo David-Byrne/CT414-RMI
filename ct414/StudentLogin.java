@@ -46,7 +46,6 @@ public class StudentLogin extends JFrame {
 
         try{
             int token = this.server.login(usernameValue,passwordValue);
-            System.out.println("Successful Login");
             setVisible(false);
             AssessmentSystem assessmentSystem = new AssessmentSystem(server,usernameValue,token);
         }
