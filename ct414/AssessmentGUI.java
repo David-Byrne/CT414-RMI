@@ -26,7 +26,15 @@ public class AssessmentGUI extends JFrame {
         this.assessment = assessment;
         this.token = token;
         this.ID_NUMBER = username;
-        initComponents();
+        try{
+            selectedQuestion = assessment.getQuestion(1);
+            initComponents();
+        }catch (InvalidQuestionNumber invalidQuestionNumber){
+            System.err.println("Invalid Question Number");
+            invalidQuestionNumber.printStackTrace();
+        }
+
+
     }
 
     class ItemChangeListener implements ItemListener {
@@ -36,9 +44,11 @@ public class AssessmentGUI extends JFrame {
                 //as we are selecting from the combo box, the user cannot type in invalid question number
                 try {
                     selectedQuestion = assessment.getQuestion(comboBox1.getSelectedIndex() + 1);
-                    System.out.println(comboBox1.getSelectedIndex() + 1);
                     QuestionValue.setText(selectedQuestion.getQuestionDetail());
                     QuestionValue.setVisible(true);
+                    for(int j = 0;j<selectedQuestion.getAnswerOptions().length; j++){
+                        comboBox2.addItem(selectedQuestion.getAnswerOptions()[j]);
+                    }
                 }catch (InvalidQuestionNumber invalidQuestionNumber){
                     System.err.println("Invalid Question Number");
                     invalidQuestionNumber.printStackTrace();
@@ -55,6 +65,7 @@ public class AssessmentGUI extends JFrame {
         comboBox1 = new JComboBox();
         Select = new JLabel();
         QuestionValue = new JLabel();
+        comboBox2 = new JComboBox();
 
         //======== this ========
         setTitle(assessment.getAssessmentCode());
@@ -69,12 +80,17 @@ public class AssessmentGUI extends JFrame {
         //---- Select ----
         Select.setText("Select from: ");
 
+
+
         //---- QuestionValue ----
-        QuestionValue.setText("text");
-        QuestionValue.setVisible(false);
+        QuestionValue.setText(selectedQuestion.getQuestionDetail());
 
         for (int i = 1; i<= assessment.getQuestions().length; i++){
             comboBox1.addItem(i);
+        }
+
+        for (int k = 0; k<selectedQuestion.getAnswerOptions().length; k++){
+            comboBox2.addItem(selectedQuestion.getAnswerOptions()[k]);
         }
 
         comboBox1.addItemListener(new ItemChangeListener());
@@ -97,7 +113,8 @@ public class AssessmentGUI extends JFrame {
                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                     .addComponent(Select)
                                     .addGap(18, 18, 18)
-                                    .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                     .addContainerGap(285, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
@@ -113,7 +130,9 @@ public class AssessmentGUI extends JFrame {
                         .addComponent(Select))
                     .addGap(18, 18, 18)
                     .addComponent(QuestionValue)
-                    .addContainerGap(131, Short.MAX_VALUE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(95, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -128,5 +147,6 @@ public class AssessmentGUI extends JFrame {
     private JComboBox comboBox1;
     private JLabel Select;
     private JLabel QuestionValue;
+    private JComboBox comboBox2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
