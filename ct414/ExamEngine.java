@@ -81,11 +81,9 @@ public class ExamEngine implements ExamServer {
     public void submitAssessment(int token, int studentid, Assessment completed) throws 
                 UnauthorizedAccess, NoMatchingAssessment, RemoteException {
         validateToken(token, studentid);
-
         for(int i=0; i<assessments.length; i++){
             if(assessments[i].getAssessmentCode().equals(completed.getAssessmentCode()) &&
-                    assessments[i].getAssociatedID() == studentid &&
-                    assessments[i].getClosingDate().after(new Date())){
+                    assessments[i].getAssociatedID() == studentid){
                 assessments[i] = completed;
                 return;
             }

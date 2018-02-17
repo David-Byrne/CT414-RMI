@@ -50,7 +50,7 @@ public class MCQassessment implements Assessment{
 
     @Override
     public void selectAnswer(int questionNumber, int optionNumber) throws InvalidQuestionNumber, InvalidOptionNumber {
-        if(questionNumber < 0 || questionNumber >= questions.length){
+        if(questionNumber < 0 || questionNumber > questions.length){
             throw new InvalidQuestionNumber();
         }
 

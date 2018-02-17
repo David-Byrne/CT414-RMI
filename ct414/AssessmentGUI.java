@@ -30,7 +30,6 @@ public class AssessmentGUI extends JFrame {
         this.token = token;
         this.ID_NUMBER = username;
         try{
-            System.out.println(assessment);
             selectedQuestion = assessment.getQuestion(1);
             initComponents();
         }catch (InvalidQuestionNumber invalidQuestionNumber){
@@ -113,9 +112,11 @@ public class AssessmentGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                     assessment.selectAnswer(comboBox1.getSelectedIndex()+1, comboBox2.getSelectedIndex());
-                    System.out.println(assessment);
                     examServer.submitAssessment(token,ID_NUMBER,assessment);
                     setVisible(false);
+                    //default title and icon
+                    JOptionPane.showMessageDialog(contentPane,
+                            "Question submitted");
                 }catch (InvalidQuestionNumber invalidQuestionNumber){
                     invalidQuestionNumber.printStackTrace();
                     System.err.println("Invalid Question Number");
