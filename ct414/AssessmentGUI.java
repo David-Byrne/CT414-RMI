@@ -45,7 +45,7 @@ public class AssessmentGUI extends JFrame {
                 try {
                     selectedQuestion = assessment.getQuestion(comboBox1.getSelectedIndex() + 1);
                     QuestionValue.setText(selectedQuestion.getQuestionDetail());
-                    QuestionValue.setVisible(true);
+                    comboBox2.removeAllItems();
                     for(int j = 0;j<selectedQuestion.getAnswerOptions().length; j++){
                         comboBox2.addItem(selectedQuestion.getAnswerOptions()[j]);
                     }
@@ -66,6 +66,8 @@ public class AssessmentGUI extends JFrame {
         Select = new JLabel();
         QuestionValue = new JLabel();
         comboBox2 = new JComboBox();
+        label3 = new JLabel();
+        label4 = new JLabel();
 
         //======== this ========
         setTitle(assessment.getAssessmentCode());
@@ -81,7 +83,6 @@ public class AssessmentGUI extends JFrame {
         Select.setText("Select from: ");
 
 
-
         //---- QuestionValue ----
         QuestionValue.setText(selectedQuestion.getQuestionDetail());
 
@@ -94,6 +95,12 @@ public class AssessmentGUI extends JFrame {
         }
 
         comboBox1.addItemListener(new ItemChangeListener());
+
+        //---- label3 ----
+        label3.setText("Question:");
+
+        //---- label4 ----
+        label4.setText("Select Answer:");
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -109,13 +116,22 @@ public class AssessmentGUI extends JFrame {
                         .addGroup(contentPaneLayout.createSequentialGroup()
                             .addGap(42, 42, 42)
                             .addGroup(contentPaneLayout.createParallelGroup()
-                                .addComponent(QuestionValue)
                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                     .addComponent(Select)
                                     .addGap(18, 18, 18)
                                     .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                    .addContainerGap(285, Short.MAX_VALUE))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                            .addComponent(label3)
+                                            .addGap(84, 84, 84)
+                                            .addComponent(QuestionValue))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                            .addComponent(label4)
+                                            .addGap(34, 34, 34)
+                                            .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))))
+                    .addContainerGap(212, Short.MAX_VALUE))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
@@ -129,10 +145,14 @@ public class AssessmentGUI extends JFrame {
                         .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(Select))
                     .addGap(18, 18, 18)
-                    .addComponent(QuestionValue)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(95, Short.MAX_VALUE))
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label3)
+                        .addComponent(QuestionValue))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(label4)
+                        .addComponent(comboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(101, Short.MAX_VALUE))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -148,5 +168,7 @@ public class AssessmentGUI extends JFrame {
     private JLabel Select;
     private JLabel QuestionValue;
     private JComboBox comboBox2;
+    private JLabel label3;
+    private JLabel label4;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

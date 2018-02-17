@@ -128,7 +128,6 @@ public class AssessmentSystem extends JFrame {
                 button1.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        setVisible(false);
                         AssessmentGUI assessmentGUI = new AssessmentGUI(server,token,ID_NUMBER, currentAssessment);
                     }
                 });
